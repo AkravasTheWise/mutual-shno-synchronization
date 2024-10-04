@@ -7,9 +7,9 @@ The ```500nm-separation``` and ```700nm-separation```folders contain the files u
 
 Additionally, there are some gifs and images that allow one to study the system in detail. I have not included the full magnetization maps nor the output folders of mumax3, but you can easily generate them by uncommenting line ```//autosave(m, 1 * 1e-11)``` in each .mx3. If you want to generate mode profile maps, you can check out this [repository](https://github.com/AkravasTheWise/semargl-ng).
 
-If you want the COMSOL files used to produce the current density distribution and Oersted field, DM me and I can send them to you. The electrical measurements and plot script in matlab is in the electrical.
+If you want the COMSOL files used to produce the current density distribution and Oersted field, DM me and I can send them to you.
 
-The ```BLS-data``` and ```electrical-data``` folders contain the experimental data associated with each figure from the paper. 
+The ```BLS-data``` and ```electrical-data``` folders contain the experimental data associated with each figure from the paper and the matlab figures. 
 
 # Executive summary of the paper
 This research delves into **spin Hall nano-oscillators** (SHNOs) and how **propagating spin waves** (PSWs) can be used to control the synchronization between them, opening up new possibilities for spintronics and unconventional computing.
