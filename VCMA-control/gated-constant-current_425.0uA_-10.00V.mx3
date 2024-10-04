@@ -1,0 +1,161 @@
+// Calculating the magnetic response of voltage-gated SHNOs
+
+OutputFormat = DUMP
+
+SizeX := 4000.* 1e-9
+SizeY := 4000. * 1e-9
+SizeZ := 1.7 * 1e-9
+
+Nx := 512
+Ny := 512
+Nz := 1
+
+CellX := SizeX / Nx
+CellY := SizeY / Ny
+CellZ := SizeZ / Nz
+
+SetCellsize(CellX, CellY, CellZ)
+SetGridsize(Nx, Ny, Nz)
+setgeom(imageShape("current-density-1mA.png"))
+setpbc(1, 0, 0)
+defregion(1, Cuboid(SizeX, SizeY, SizeZ))
+defregion(2, Cuboid(SizeX, 150e-9, SizeZ)) // Gated region
+ext_ScaleExchange(1, 2, 1.)
+
+damping_boundary := 3900. * 1e-9
+alpha_boundary := ceil((SizeX - damping_boundary)/CellX)
+for i:= 3; i<3+alpha_boundary; i++{
+	defregion(i, Square(damping_boundary + (i-3) * 1e-9).Inverse() )
+	ext_ScaleExchange(1, i, 1.)
+	alpha.setregion(i, pow(i-2,1)*(0.9 - 9 * 1e-3)/pow(alpha_boundary, 2) + 9 * 1e-3)
+	m.setregion(i, uniform(0, 0, 1))
+}
+
+// Parameters of the FM layer
+
+// Uniaxial anisotropy
+//Ku1.setregion(1, 0.6450 * 1e+6) //value
+Ku1.setregion(1, 0.6450 * 1e+6) //value
+Ku1.setregion(2, 0.6700 * 1e+6) // VCMA Voltage: -10.00V
+anisU = vector(0, 0, 1) //direction
+
+// LLG parameters
+
+Aex = 19 * 1e-12
+Msat = 1050. * 1e3
+alpha.setregion(1, 25 * 1e-3)
+alpha.setregion(2, 25 * 1e-3)
+GammaLL = 2. * pi * 29.1 * 1e9
+
+// Demagnetization
+
+EnableDemag = true
+
+//Biasing field
+
+B0 := 400. * 1e-3
+theta := 65 * pi / 180
+phi := 22 * pi / 180
+//phi := 0 * pi / 180
+
+
+ux := cos(theta) * cos(phi)
+uy := cos(theta) * sin(phi)
+uz := sin(theta)
+
+B_ext = vector(B0*ux, B0*uy, B0*uz)
+
+// Biasing current
+
+Icur := 0.42500 // Current: 0.42500 mA
+SH_angle := 0.6
+Jz_polarized := (Icur * SH_angle)
+//FP := Jz_polarized
+
+// Oersted field
+
+B_ext.Add(LoadFile("oersted-field-1mA.ovf"), Icur)
+
+// Time intervals
+
+MaxDt = 1e-12
+MinDt = 1e-18
+MaxErr = 1e-7
+
+// Initial magnetization
+
+m.setregion(1, uniform(0, 0, 1))
+
+// Energy minimization
+
+relax()
+
+// Schedule outputs
+
+tableadd(m)
+tableadd(CropX(m, Nx/2 - 9, Nx/2 + 9))
+tableadd(Crop(m, Nx/2 - 9, Nx/2 + 9, Ny/2 - 32 - 5, Ny/2 - 32 + 5, 0, Nz))
+tableadd(Crop(m, Nx/2 - 9, Nx/2 + 9, Ny/2 + 32 - 5, Ny/2 + 32 + 5, 0, Nz))
+tableautosave(1e-11)
+autosave(m, 1 * 1e-11)
+
+// Load current density
+
+//jd := LoadFile("current-density.ovf")
+jd := LoadFile("current-density-1mA.ovf")
+//jd := LoadFile("CurrentCoFeB14W150.ovf")
+//jamp := 1
+
+// Calculate polarization 
+
+p_dir := newSlice(3, Nx, Ny, Nz)
+s_N := vector(0, 0, 1)
+
+for kk:=0; kk < Nz; kk++{
+	for jj :=0; jj < Ny; jj++ {
+		for ii := 0; ii < Nx; ii++ {
+			jx := jd.get(0, ii, jj, kk)
+			jy := jd.get(1, ii, jj, kk)
+			jz := jd.get(2, ii, jj, kk)
+			
+			// Handle NaN values in current array
+			if isNaN(jx) || isNaN(jy) || isNaN(jz){
+				jd.setvector(ii, jj, kk, vector(0,0,0) )
+			}
+
+			joop := sqrt(jx*jx + jy*jy + jz*jz)
+
+			// assign zero if current vector is zero or NaN
+			if joop != 0 && !isNaN(joop) {jd.setvector(ii, jj, kk, vector(0, 0, joop))			
+
+			uj := vector(jx/joop, jy/joop, jz/joop)
+			q := s_n.cross(uj)
+			p_dir.setvector(ii, jj, kk, q)
+
+			} else {
+				q := vector(0, 0, 0)
+				p_dir.setvector(ii, jj, kk, q)
+			}
+
+			
+		}
+	}
+}
+
+// Add the polarization from the HM
+
+FixedLayer.Add(p_dir, Icur)
+//FixedLayer.Add(LoadFile("CurrentCoFeB14W150.polarization.ovf"), Icur)
+
+// Add the current
+
+J.Add(jd, Jz_polarized)
+//J.AddTo(Mul(jd, Jz_polarized))
+
+Pol = 1.0
+Lambda = 1.0
+DisableZhangLiTorque = true
+
+setsolver(3)
+
+run(30 * 1e-9)
