@@ -3,7 +3,7 @@ This reposirtory contains the code used for the micromagnetic simulations in the
 
 The folders contain the files used to simulate the magnetic dynamics of double constriction spin Hall nano-oscillators. Each folder contains:
 * The COMSOL files used to produce the current density distribution and Oersted field.
-* The Oersted field and current .ovf files necessary to run the mumax3 code.
+* The Oersted field and current density .ovf files necessary to run the mumax3 code.
 * The mumax3 code for each biasing current.
 
 Additionally, there are some gifs and images that allow one to study the system in detail. I have not included the full magnetization maps nor the output folders of mumax3, but you can easily generate them by uncommenting line ```//autosave(m, 1 * 1e-11)``` in each .mx3. If you want to generate mode profile maps, you can check out this [repository](https://github.com/AkravasTheWise/semargl-ng)
