@@ -9,8 +9,8 @@ Additionally, there are some gifs and images that allow one to study the system 
 
 If you want the COMSOL files used to produce the current density distribution and Oersted field, DM me and I can send them to you. The electrical measurements and plot script in matlab is in the electrical 
 
-# Executive sumary of the paper
-This research delves into the fascinating world of **spin Hall nano-oscillators** (SHNOs) and how **propagating spin waves** (PSWs) can be used to control the synchronization between them, opening up new possibilities for spintronics and unconventional computing.
+# Executive summary of the paper
+This research delves into **spin Hall nano-oscillators** (SHNOs) and how **propagating spin waves** (PSWs) can be used to control the synchronization between them, opening up new possibilities for spintronics and unconventional computing.
 
 ## What Are Spin Hall Nano-Oscillators?
 
