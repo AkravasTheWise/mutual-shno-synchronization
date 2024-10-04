@@ -1,3 +1,4 @@
+[![DOI](https://zenodo.org/badge/867541789.svg)](https://doi.org/10.5281/zenodo.13891411)
 # Spin-wave mediated mutual synchronization and phase tuning in spin Hall nano-oscillators
 This repository contains the micromagnetic simulation code, and BLS and electrical measurement data used in the paper: **Spin-wave mediated mutual synchronization and phase tuning in spin Hall nano-oscillators** by A. Kumar *et al*.
 
