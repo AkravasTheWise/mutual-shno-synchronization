@@ -1,0 +1,12 @@
+cff-version: 1.1.0
+message: "If you use this code, please cite it as below."
+authors:
+- family-names: González
+  given-names: Victor H.
+- family-names: Kumar
+  given-names: Akash
+- family-names: Chaurasiya
+  given-names: Avinash
+title:Code and experimental data for: Spin-wave mediated mutual synchronization and phase tuning in spin Hall nano-oscillators
+version: v1.0.0
+date-released: 2024-10-04
