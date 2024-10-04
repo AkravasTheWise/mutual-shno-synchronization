@@ -6,7 +6,7 @@ The folders contain the files used to simulate the magnetic dynamics of double c
 * The Oersted field and current .ovf files necessary to run the mumax3 code.
 * The mumax3 code for each biasing current.
 
-Additionally, there are some gifs and images that allow one to study the system in detail. I have not included the full magnetization maps nor the output folders of mumax3, but you can easily generate them by uncommenting line ```//autosave(m, 1 * 1e-11)``` in each .mx3.
+Additionally, there are some gifs and images that allow one to study the system in detail. I have not included the full magnetization maps nor the output folders of mumax3, but you can easily generate them by uncommenting line ```//autosave(m, 1 * 1e-11)``` in each .mx3. If you want to generate mode profile maps, you can check out this [repository](https://github.com/AkravasTheWise/semargl-ng)
 
 # Executive sumary of the paper
 This research delves into the fascinating world of **spin Hall nano-oscillators** (SHNOs) and how **propagating spin waves** (PSWs) can be used to control the synchronization between them, opening up new possibilities for spintronics and unconventional computing.
